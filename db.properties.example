@@ -1,0 +1,9 @@
+# Database Configuration for Bank Management System
+# Aiven MySQL Cloud or Localhost configuration
+
+db.host=mysql-2494552c-shivakumarnayak2005-012f.i.aivencloud.com
+db.port=13685
+db.name=defaultdb
+db.user=avnadmin
+db.password=YOUR_AIVEN_PASSWORD_HERE
+db.ssl=true
