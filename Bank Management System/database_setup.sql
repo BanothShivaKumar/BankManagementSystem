@@ -1,6 +1,8 @@
 -- Database Schema for Bank Management System
 -- Compatible with local MySQL and Aiven Cloud MySQL (defaultdb)
 
+SET SESSION sql_require_primary_key = 0;
+
 CREATE TABLE IF NOT EXISTS signup (
     formno VARCHAR(30),
     name VARCHAR(100),
