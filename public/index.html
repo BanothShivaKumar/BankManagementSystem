@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Bank | Enterprise Online Banking & ATM Suite</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <a href="/" class="brand">
+      <div class="brand-icon">🏛️</div>
+      <div class="brand-text">
+        <h1>Apex Bank</h1>
+        <span>Management System</span>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Aiven Cloud Live</span>
+      </div>
+      <a href="signup.html" class="btn btn-secondary">New Application</a>
+    </div>
+  </header>
+
+  <!-- Main Hero & Login Section -->
+  <main class="container">
+    <div class="hero-auth">
+      <!-- Left Hero Overview & Live Card Preview -->
+      <div class="hero-left">
+        <div class="badge" style="display:inline-block; padding: 6px 14px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 99px; color: var(--accent-cyan); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;">
+          ⚡ Enterprise Banking Architecture
+        </div>
+        <h2 class="title-hero">
+          Secure Banking, <br>
+          <span class="gradient-text">Anywhere, Anytime.</span>
+        </h2>
+        <p class="lead-text">
+          Access your digital ATM suite, manage balances, execute real-time deposits and withdrawals, and review transaction ledgers powered by high-speed cloud infrastructure.
+        </p>
+
+        <!-- Interactive 3D Digital Card -->
+        <div class="atm-card-wrapper">
+          <div class="atm-card" id="digitalCard">
+            <div class="card-top">
+              <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.25rem; letter-spacing: 1px;">APEX PLATINUM</span>
+              <div class="card-chip"></div>
+            </div>
+            <div class="card-number" id="previewCardNumber">5040 •••• •••• ••••</div>
+            <div class="card-bottom">
+              <div>
+                <div class="card-holder">Card Holder</div>
+                <div class="card-holder-name" id="previewCardHolder">VALUED CUSTOMER</div>
+              </div>
+              <div style="font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: #38bdf8;">
+                VISA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 2rem; color: var(--text-secondary); font-size: 0.9rem;">
+          <div>🔒 <strong>256-Bit SSL</strong> Encryption</div>
+          <div>☁️ <strong>Aiven Managed</strong> MySQL</div>
+          <div>⚡ <strong>Instant</strong> Settlement</div>
+        </div>
+      </div>
+
+      <!-- Right Login Card -->
+      <div class="hero-right">
+        <div class="auth-card">
+          <h3>Customer Login</h3>
+          <p class="subtitle">Enter your 16-digit card number and 4-digit PIN</p>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label class="form-label" for="cardNumber">Card Number</label>
+              <div class="input-wrapper">
+                <span class="input-icon">💳</span>
+                <input 
+                  type="text" 
+                  id="cardNumber" 
+                  class="form-control" 
+                  placeholder="5040 XXXX XXXX XXXX" 
+                  maxlength="19" 
+                  required 
+                  autocomplete="off"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="pinNumber">ATM PIN</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🔑</span>
+                <input 
+                  type="password" 
+                  id="pinNumber" 
+                  class="form-control" 
+                  placeholder="••••" 
+                  maxlength="6" 
+                  required 
+                  autocomplete="current-password"
+                >
+                <button type="button" class="input-action-btn" id="togglePinBtn" title="Toggle visibility">👁️</button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="loginSubmitBtn" style="width: 100%; margin-top: 1rem;">
+              <span>Access Banking Portal</span> →
+            </button>
+          </form>
+
+          <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Don't have an account yet?</p>
+            <a href="signup.html" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600; display: inline-block; margin-top: 6px;">
+              Apply for an Account & ATM Card →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -4,6 +4,10 @@
 # Log files
 *.log
 
+# Node dependencies
+node_modules/
+
+
 # Sensitive credentials
 db.properties
 

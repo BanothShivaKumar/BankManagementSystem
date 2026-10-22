@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATM & Banking Dashboard | Apex Bank</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Dashboard Top Navbar -->
+  <header class="navbar">
+    <a href="/dashboard.html" class="brand">
+      <div class="brand-icon">🏛️</div>
+      <div class="brand-text">
+        <h1>Apex Bank</h1>
+        <span>ATM & Online Portal</span>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Aiven Live</span>
+      </div>
+      <button class="btn btn-secondary" id="logoutBtn" style="padding: 10px 18px; font-size: 0.9rem;">
+        Logout ➔
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Header Welcome -->
+    <div class="dashboard-header">
+      <div class="user-welcome">
+        <h2>Welcome back, <span id="dashUserName" class="gradient-text">Customer</span> 👋</h2>
+        <p>Active Debit Card: <strong id="dashMaskedCard" style="font-family: var(--font-mono); color: #fff;">5040 •••• •••• ••••</strong></p>
+      </div>
+      <div>
+        <button class="btn btn-secondary" id="refreshBalanceBtn" title="Refresh Live Balance from Cloud">
+          🔄 Sync Balance
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Account Balance Hero Card -->
+    <div class="balance-card">
+      <div>
+        <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 600;">
+          Available Account Balance
+        </div>
+        <div class="balance-amount" id="dashBalanceDisplay">$0.00</div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
+          <span>Cloud Database Verified</span> • <span id="dashLastSyncTime">Just now</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-emerald" id="openDepositModalBtn">
+          + Deposit Funds
+        </button>
+        <button class="btn btn-rose" id="openWithdrawalModalBtn">
+          - Withdraw Cash
+        </button>
+      </div>
+    </div>
+
+    <!-- ATM Quick Action Suite -->
+    <h3 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; margin-bottom: 1.25rem;">
+      ATM Quick Action Suite
+    </h3>
+    <div class="actions-grid">
+      <div class="action-card" id="cardActionFastCash">
+        <div class="action-icon">⚡</div>
+        <h4>Fast Cash</h4>
+        <p>Pre-configured one-tap cash withdrawals from $20 to $1,000.</p>
+      </div>
+
+      <div class="action-card" id="cardActionDeposit">
+        <div class="action-icon">💰</div>
+        <h4>Deposit Cash</h4>
+        <p>Credit funds to your account instantly with real-time ledger settlement.</p>
+      </div>
+
+      <div class="action-card" id="cardActionWithdraw">
+        <div class="action-icon">🏧</div>
+        <h4>Cash Withdrawal</h4>
+        <p>Custom amount cash withdrawal with automatic balance verification.</p>
+      </div>
+
+      <div class="action-card" id="cardActionPinChange">
+        <div class="action-icon">🔐</div>
+        <h4>Change ATM PIN</h4>
+        <p>Securely update your 4-digit ATM card PIN instantly across all banking tables.</p>
+      </div>
+
+      <div class="action-card" id="cardActionStatement">
+        <div class="action-icon">📜</div>
+        <h4>Mini Statement</h4>
+        <p>Audit recent transaction history, deposit logs, and ledger balance statements.</p>
+      </div>
+    </div>
+
+    <!-- Recent Transactions Ledger -->
+    <div style="margin-top: 3.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h3 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700;">
+          Recent Transactions Ledger
+        </h3>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Real-time Cloud Log</span>
+      </div>
+
+      <div class="tx-table-wrapper">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Transaction Type</th>
+              <th>Reference PIN</th>
+              <th style="text-align: right;">Amount ($)</th>
+            </tr>
+          </thead>
+          <tbody id="txTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                Loading transactions ledger...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: DEPOSIT -->
+  <div class="modal-overlay" id="depositModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Deposit Funds</h3>
+        <button class="modal-close" data-close="depositModal">×</button>
+      </div>
+      <form id="depositForm">
+        <div class="form-group">
+          <label class="form-label" for="depositAmount">Amount to Deposit ($)</label>
+          <input type="number" id="depositAmount" class="form-control" style="padding-left:16px;" placeholder="e.g. 500" min="1" step="any" required>
+        </div>
+        <button type="submit" class="btn btn-emerald" style="width: 100%;">
+          Confirm Cash Deposit
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: WITHDRAWAL -->
+  <div class="modal-overlay" id="withdrawalModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Cash Withdrawal</h3>
+        <button class="modal-close" data-close="withdrawalModal">×</button>
+      </div>
+      <form id="withdrawalForm">
+        <div class="form-group">
+          <label class="form-label" for="withdrawAmount">Amount to Withdraw ($)</label>
+          <input type="number" id="withdrawAmount" class="form-control" style="padding-left:16px;" placeholder="e.g. 100" min="1" step="any" required>
+        </div>
+        <button type="submit" class="btn btn-rose" style="width: 100%;">
+          Confirm Cash Withdrawal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: FAST CASH -->
+  <div class="modal-overlay" id="fastCashModal">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3>⚡ Fast Cash Withdrawal</h3>
+        <button class="modal-close" data-close="fastCashModal">×</button>
+      </div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+        Select a preset amount to withdraw instantly from your account.
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <button class="btn btn-secondary fast-cash-btn" data-amt="20">$20.00</button>
+        <button class="btn btn-secondary fast-cash-btn" data-amt="50">$50.00</button>
+        <button class="btn btn-secondary fast-cash-btn" data-amt="100">$100.00</button>
+        <button class="btn btn-secondary fast-cash-btn" data-amt="200">$200.00</button>
+        <button class="btn btn-secondary fast-cash-btn" data-amt="500">$500.00</button>
+        <button class="btn btn-secondary fast-cash-btn" data-amt="1000">$1,000.00</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PIN CHANGE -->
+  <div class="modal-overlay" id="pinChangeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Change ATM PIN</h3>
+        <button class="modal-close" data-close="pinChangeModal">×</button>
+      </div>
+      <form id="pinChangeForm">
+        <div class="form-group">
+          <label class="form-label" for="currentPin">Current PIN</label>
+          <input type="password" id="currentPin" class="form-control" style="padding-left:16px;" maxlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="newPin">New 4-Digit PIN</label>
+          <input type="password" id="newPin" class="form-control" style="padding-left:16px;" maxlength="6" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirmNewPin">Re-Enter New PIN</label>
+          <input type="password" id="confirmNewPin" class="form-control" style="padding-left:16px;" maxlength="6" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Update PIN Across All Records
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>
