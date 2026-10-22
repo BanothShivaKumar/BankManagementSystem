@@ -10,7 +10,7 @@
       display: flex;
       justify-content: space-between;
       position: relative;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.75rem;
     }
     .steps-indicator::before {
       content: '';
@@ -26,31 +26,32 @@
     .step-item {
       position: relative;
       z-index: 2;
-      background: var(--bg-primary);
-      padding: 0 12px;
+      background: var(--bg-deep);
+      padding: 0 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
     }
     .step-circle {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: #111827;
+      background: #0f172a;
       border: 2px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text-muted);
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .step-item.active .step-circle {
-      background: var(--accent-cyan);
-      border-color: var(--accent-cyan);
-      color: #070913;
-      box-shadow: var(--glow-cyan);
+      background: linear-gradient(135deg, #06b6d4, #6366f1);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+      transform: scale(1.1);
     }
     .step-item.completed .step-circle {
       background: var(--accent-emerald);
@@ -59,23 +60,26 @@
     }
     .step-label {
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
-    .step-item.active .step-label { color: var(--accent-cyan); }
+    .step-item.active .step-label { color: var(--accent-cyan-light); }
     .form-step { display: none; }
-    .form-step.active { display: block; animation: fadeIn 0.3s ease; }
+    .form-step.active { display: block; animation: stepFade 0.35s ease; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
     @media (max-width: 650px) { .grid-2 { grid-template-columns: 1fr; } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes stepFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <header class="navbar">
     <a href="/" class="brand">
-      <div class="brand-icon">🏛️</div>
+      <div class="brand-icon-wrapper">
+        <div class="brand-icon-glow"></div>
+        <div class="brand-icon">🏛️</div>
+      </div>
       <div class="brand-text">
         <h1>Apex Bank</h1>
         <span>Application Portal</span>
@@ -86,51 +90,51 @@
     </div>
   </header>
 
-  <main class="container" style="max-width: 800px;">
+  <main class="container" style="max-width: 840px;">
     <!-- Stepper Indicator -->
     <div class="steps-indicator">
       <div class="step-item active" id="stepIndicator1">
         <div class="step-circle">1</div>
-        <div class="step-label">Personal</div>
+        <div class="step-label">Personal Profile</div>
       </div>
       <div class="step-item" id="stepIndicator2">
         <div class="step-circle">2</div>
-        <div class="step-label">KYC / Income</div>
+        <div class="step-label">KYC & Income</div>
       </div>
       <div class="step-item" id="stepIndicator3">
         <div class="step-circle">3</div>
-        <div class="step-label">Account & Card</div>
+        <div class="step-label">Card & Facilities</div>
       </div>
     </div>
 
     <!-- Application Form Card -->
-    <div class="auth-card" style="padding: 3rem;">
+    <div class="auth-card" style="padding: 3rem 3rem;">
       <form id="signupWizardForm">
         
         <!-- STEP 1: Personal Details -->
         <div class="form-step active" id="step1">
-          <h3 style="margin-bottom: 0.5rem;">Step 1: Personal Profile</h3>
+          <h3 style="margin-bottom: 0.4rem;">Step 1: Personal Profile</h3>
           <p class="subtitle">Please provide your legal contact and identity details</p>
 
           <div class="grid-2">
             <div class="form-group">
-              <label class="form-label" for="fullName">Full Name</label>
-              <input type="text" id="fullName" class="form-control" style="padding-left:16px;" placeholder="e.g. John Doe" required>
+              <label class="form-label" for="fullName">Full Name (as on ID)</label>
+              <input type="text" id="fullName" class="form-control" style="padding-left:18px;" placeholder="e.g. John Doe" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="fatherName">Father's Name</label>
-              <input type="text" id="fatherName" class="form-control" style="padding-left:16px;" placeholder="e.g. Robert Doe" required>
+              <input type="text" id="fatherName" class="form-control" style="padding-left:18px;" placeholder="e.g. Robert Doe" required>
             </div>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="dob">Date of Birth</label>
-              <input type="date" id="dob" class="form-control" style="padding-left:16px;" required>
+              <input type="date" id="dob" class="form-control" style="padding-left:18px;" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="gender">Gender</label>
-              <select id="gender" class="form-control" style="padding-left:16px;">
+              <select id="gender" class="form-control" style="padding-left:18px;">
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
@@ -141,11 +145,11 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="email">Email Address</label>
-              <input type="email" id="email" class="form-control" style="padding-left:16px;" placeholder="john@example.com" required>
+              <input type="email" id="email" class="form-control" style="padding-left:18px;" placeholder="john@example.com" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="maritalStatus">Marital Status</label>
-              <select id="maritalStatus" class="form-control" style="padding-left:16px;">
+              <select id="maritalStatus" class="form-control" style="padding-left:18px;">
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
                 <option value="Other">Other</option>
@@ -155,40 +159,40 @@
 
           <div class="form-group">
             <label class="form-label" for="address">Residential Address</label>
-            <input type="text" id="address" class="form-control" style="padding-left:16px;" placeholder="Street and House Number" required>
+            <input type="text" id="address" class="form-control" style="padding-left:18px;" placeholder="Street, Building, Flat No." required>
           </div>
 
           <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr;">
             <div class="form-group">
               <label class="form-label" for="city">City</label>
-              <input type="text" id="city" class="form-control" style="padding-left:16px;" placeholder="City" required>
+              <input type="text" id="city" class="form-control" style="padding-left:18px;" placeholder="City" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="state">State</label>
-              <input type="text" id="state" class="form-control" style="padding-left:16px;" placeholder="State" required>
+              <input type="text" id="state" class="form-control" style="padding-left:18px;" placeholder="State" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="pincode">Pincode / ZIP</label>
-              <input type="text" id="pincode" class="form-control" style="padding-left:16px;" placeholder="ZIP" required>
+              <label class="form-label" for="pincode">ZIP / Pincode</label>
+              <input type="text" id="pincode" class="form-control" style="padding-left:18px;" placeholder="Pincode" required>
             </div>
           </div>
 
           <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
-            <button type="button" class="btn btn-primary" id="toStep2Btn">
-              Next: KYC Details →
+            <button type="button" class="btn btn-primary" id="toStep2Btn" style="padding: 13px 28px;">
+              Next: KYC Details ➔
             </button>
           </div>
         </div>
 
-        <!-- STEP 2: Additional / KYC Details -->
+        <!-- STEP 2: Additional & KYC Details -->
         <div class="form-step" id="step2">
-          <h3 style="margin-bottom: 0.5rem;">Step 2: Additional & KYC Details</h3>
+          <h3 style="margin-bottom: 0.4rem;">Step 2: Additional & KYC Details</h3>
           <p class="subtitle">Tax identification and occupation classification</p>
 
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="religion">Religion</label>
-              <select id="religion" class="form-control" style="padding-left:16px;">
+              <select id="religion" class="form-control" style="padding-left:18px;">
                 <option value="Hindu">Hindu</option>
                 <option value="Muslim">Muslim</option>
                 <option value="Christian">Christian</option>
@@ -198,7 +202,7 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="category">Category</label>
-              <select id="category" class="form-control" style="padding-left:16px;">
+              <select id="category" class="form-control" style="padding-left:18px;">
                 <option value="General">General</option>
                 <option value="OBC">OBC</option>
                 <option value="SC">SC</option>
@@ -210,11 +214,11 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="income">Annual Income ($)</label>
-              <input type="number" id="income" class="form-control" style="padding-left:16px;" placeholder="e.g. 75000" required>
+              <input type="number" id="income" class="form-control" style="padding-left:18px;" placeholder="e.g. 75000" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="education">Educational Qualification</label>
-              <select id="education" class="form-control" style="padding-left:16px;">
+              <select id="education" class="form-control" style="padding-left:18px;">
                 <option value="Graduate">Graduate</option>
                 <option value="Post-Graduate">Post-Graduate</option>
                 <option value="Doctorate">Doctorate</option>
@@ -226,7 +230,7 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="occupation">Occupation</label>
-              <select id="occupation" class="form-control" style="padding-left:16px;">
+              <select id="occupation" class="form-control" style="padding-left:18px;">
                 <option value="Salaried">Salaried</option>
                 <option value="Self-Employed">Self-Employed</option>
                 <option value="Business">Business</option>
@@ -236,18 +240,18 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="panNumber">PAN / Tax ID</label>
-              <input type="text" id="panNumber" class="form-control" style="padding-left:16px;" placeholder="ABCDE1234F" required>
+              <input type="text" id="panNumber" class="form-control" style="padding-left:18px;" placeholder="ABCDE1234F" required>
             </div>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="aadharNumber">Aadhaar / National ID</label>
-              <input type="text" id="aadharNumber" class="form-control" style="padding-left:16px;" placeholder="12-digit ID" required>
+              <input type="text" id="aadharNumber" class="form-control" style="padding-left:18px;" placeholder="12-Digit Number" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="seniorCitizen">Senior Citizen?</label>
-              <select id="seniorCitizen" class="form-control" style="padding-left:16px;">
+              <select id="seniorCitizen" class="form-control" style="padding-left:18px;">
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
               </select>
@@ -256,25 +260,27 @@
 
           <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
             <button type="button" class="btn btn-secondary" id="backToStep1Btn">← Back</button>
-            <button type="button" class="btn btn-primary" id="toStep3Btn">Next: Account Setup →</button>
+            <button type="button" class="btn btn-primary" id="toStep3Btn" style="padding: 13px 28px;">
+              Next: Account Setup ➔
+            </button>
           </div>
         </div>
 
         <!-- STEP 3: Account Configuration -->
         <div class="form-step" id="step3">
-          <h3 style="margin-bottom: 0.5rem;">Step 3: Account & ATM Features</h3>
+          <h3 style="margin-bottom: 0.4rem;">Step 3: Account & ATM Features</h3>
           <p class="subtitle">Select your account tier and digital banking privileges</p>
 
           <div class="form-group">
             <label class="form-label">Account Type</label>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight:600;">
                 <input type="radio" name="accountType" value="Saving Account" checked> Saving Account
               </label>
-              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight:600;">
                 <input type="radio" name="accountType" value="Current Account"> Current Account
               </label>
-              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+              <label style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 16px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight:600;">
                 <input type="radio" name="accountType" value="Fixed Deposit"> Fixed Deposit
               </label>
             </div>
@@ -282,29 +288,32 @@
 
           <div class="form-group">
             <label class="form-label">Required Digital Services</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-secondary);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem;">
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #cbd5e1;">
                 <input type="checkbox" id="facAtm" checked> ATM / Debit Card (Complimentary)
               </label>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-secondary);">
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #cbd5e1;">
                 <input type="checkbox" id="facNet" checked> Internet Banking
               </label>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-secondary);">
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #cbd5e1;">
                 <input type="checkbox" id="facAlerts" checked> Email & SMS Alerts
               </label>
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-secondary);">
+              <label style="display: flex; align-items: center; gap: 10px; font-size: 0.95rem; color: #cbd5e1;">
                 <input type="checkbox" id="facCheque"> Cheque Book Facility
               </label>
             </div>
           </div>
 
-          <div style="background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px; padding: 14px 18px; margin: 1.5rem 0; font-size: 0.85rem; color: var(--accent-cyan);">
-            🎁 <strong>Welcome Bonus:</strong> An initial deposit credit of <strong>$500.00</strong> will be credited to your account upon activation!
+          <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 16px; padding: 16px 20px; margin: 1.75rem 0; font-size: 0.9rem; color: var(--accent-cyan-light); display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.5rem;">🎁</span>
+            <div>
+              <strong>Opening Deposit Credit:</strong> A welcome credit of <strong>$500.00</strong> will be automatically settled into your new Aiven cloud ledger!
+            </div>
           </div>
 
           <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
             <button type="button" class="btn btn-secondary" id="backToStep2Btn">← Back</button>
-            <button type="submit" class="btn btn-emerald" id="submitApplicationBtn">
+            <button type="submit" class="btn btn-emerald" id="submitApplicationBtn" style="padding: 14px 32px;">
               <span>Submit & Generate ATM Card</span> ✨
             </button>
           </div>
@@ -312,33 +321,37 @@
 
       </form>
 
-      <!-- SUCCESS MODAL / CARD -->
-      <div id="signupSuccessCard" style="display: none; text-align: center; padding: 2rem 0;">
-        <div style="font-size: 3.5rem; margin-bottom: 1rem;">🎉</div>
-        <h3 style="font-size: 2rem; color: var(--accent-emerald); margin-bottom: 0.5rem;">Application Approved!</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Your account and digital ATM card have been provisioned in the cloud.</p>
+      <!-- SUCCESS CERTIFICATE -->
+      <div id="signupSuccessCard" style="display: none; text-align: center; padding: 1rem 0;">
+        <div style="font-size: 4rem; margin-bottom: 0.75rem;">🎉</div>
+        <h3 style="font-size: 2.25rem; font-family: var(--font-display); font-weight: 800; color: #34d399; margin-bottom: 0.5rem;">
+          Account Successfully Created!
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+          Your digital account and physical ATM card record have been provisioned in Aiven MySQL.
+        </p>
 
-        <div style="background: #090e1f; border: 1px solid var(--accent-cyan); border-radius: 16px; padding: 1.75rem; max-width: 440px; margin: 0 auto 2.5rem; text-align: left; box-shadow: var(--glow-cyan);">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+        <div style="background: linear-gradient(135deg, #090e1f, #151d38); border: 1px solid var(--accent-cyan); border-radius: 22px; padding: 2rem; max-width: 480px; margin: 0 auto 2.5rem; text-align: left; box-shadow: var(--glow-cyan);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">
             <span style="color: var(--text-muted); font-size: 0.85rem;">Application Form No:</span>
             <strong id="resFormNo" style="font-family: var(--font-mono); color: #fff;">-</strong>
           </div>
-          <div style="margin-bottom: 1rem;">
-            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 4px;">Assigned Card Number:</div>
-            <div id="resCardNumber" style="font-family: var(--font-mono); font-size: 1.35rem; color: var(--accent-cyan); letter-spacing: 2px; font-weight: 700;">-</div>
+          <div style="margin-bottom: 1.25rem;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 4px;">Assigned 16-Digit Card Number:</div>
+            <div id="resCardNumber" style="font-family: var(--font-card); font-size: 1.5rem; color: var(--accent-cyan-light); letter-spacing: 2px; font-weight: 700;">-</div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
             <div>
-              <div style="color: var(--text-muted); font-size: 0.85rem;">Initial ATM PIN:</div>
-              <strong id="resPin" style="font-family: var(--font-mono); font-size: 1.25rem; color: #fff;">-</strong>
+              <div style="color: var(--text-muted); font-size: 0.85rem;">Initial 4-Digit PIN:</div>
+              <strong id="resPin" style="font-family: var(--font-mono); font-size: 1.35rem; color: #fff;">-</strong>
             </div>
-            <div class="badge badge-deposit">+$500.00 Active</div>
+            <div class="badge badge-deposit">+$500.00 Active Balance</div>
           </div>
         </div>
 
-        <a href="index.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem;">
-          Go to Login Portal →
-        </a>
+        <button type="button" class="btn btn-primary" id="autoLoginFromSignupBtn" style="padding: 15px 36px; font-size: 1.05rem;">
+          Enter Dashboard With New Card ➔
+        </button>
       </div>
 
     </div>

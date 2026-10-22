@@ -1,5 +1,5 @@
 // =============================================================
-// APEX BANK CLIENT LOGIC & API INTEGRATION
+// APEX BANK CLIENT LOGIC & ENHANCED INTERACTIVITY
 // =============================================================
 
 // Toast Notification Helper
@@ -10,8 +10,8 @@ function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.innerHTML = `
-    <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
-    <span>${message}</span>
+    <span style="font-size: 1.2rem;">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+    <span style="font-weight: 500;">${message}</span>
   `;
   container.appendChild(toast);
 
@@ -29,13 +29,42 @@ function formatCurrency(num) {
 }
 
 // -------------------------------------------------------------
-// 1. INDEX / LOGIN PAGE LOGIC
+// 1. 3D INTERACTIVE METALLIC ATM CARD PARALLAX EFFECT
+// -------------------------------------------------------------
+const digitalCard = document.getElementById('digitalCard');
+const cardScene = document.querySelector('.card-scene');
+
+if (digitalCard && cardScene) {
+  cardScene.addEventListener('mousemove', (e) => {
+    const rect = digitalCard.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -12;
+    const rotateY = ((x - centerX) / centerX) * 14;
+
+    digitalCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    digitalCard.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+    digitalCard.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+  });
+
+  cardScene.addEventListener('mouseleave', () => {
+    digitalCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+// -------------------------------------------------------------
+// 2. INDEX / LOGIN PAGE LOGIC
 // -------------------------------------------------------------
 const cardNumberInput = document.getElementById('cardNumber');
 const pinNumberInput = document.getElementById('pinNumber');
 const loginForm = document.getElementById('loginForm');
 const previewCardNumber = document.getElementById('previewCardNumber');
 const togglePinBtn = document.getElementById('togglePinBtn');
+const autoFillDemoBtn = document.getElementById('autoFillDemoBtn');
 
 if (cardNumberInput) {
   // Auto-format card number as 4-4-4-4
@@ -58,13 +87,29 @@ if (togglePinBtn && pinNumberInput) {
   });
 }
 
+// 1-Click Demo Account Auto-Fill
+if (autoFillDemoBtn && cardNumberInput && pinNumberInput) {
+  autoFillDemoBtn.addEventListener('click', () => {
+    // Fill demo credentials
+    cardNumberInput.value = '5040 2374 9796 1138';
+    pinNumberInput.value = '6859';
+    if (previewCardNumber) {
+      previewCardNumber.textContent = '5040 2374 9796 1138';
+    }
+    const holderEl = document.getElementById('previewCardHolder');
+    if (holderEl) holderEl.textContent = 'JOHN DOE';
+
+    showToast('Demo Credentials Loaded (John Doe)! Click "Authorize & Enter" to proceed.', 'info');
+  });
+}
+
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('loginSubmitBtn');
     const originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = 'Authenticating...';
+    btn.innerHTML = '<span>Verifying Credentials...</span>';
 
     const card = cardNumberInput.value.replace(/\s/g, '');
     const pin = pinNumberInput.value.trim();
@@ -78,7 +123,7 @@ if (loginForm) {
 
       const data = await res.json();
       if (data.success) {
-        showToast('Access Granted! Redirecting to Dashboard...', 'success');
+        showToast('Access Authorized! Entering ATM Suite...', 'success');
         localStorage.setItem('apex_user', JSON.stringify({
           cardnumber: data.cardnumber,
           pin: data.pin,
@@ -86,14 +131,14 @@ if (loginForm) {
         }));
         setTimeout(() => {
           window.location.href = 'dashboard.html';
-        }, 800);
+        }, 600);
       } else {
         showToast(data.message || 'Invalid Card Number or PIN', 'error');
         btn.disabled = false;
         btn.innerHTML = originalText;
       }
     } catch (err) {
-      showToast('Network/Server Error: ' + err.message, 'error');
+      showToast('Connection Error: ' + err.message, 'error');
       btn.disabled = false;
       btn.innerHTML = originalText;
     }
@@ -101,13 +146,16 @@ if (loginForm) {
 }
 
 // -------------------------------------------------------------
-// 2. SIGNUP WIZARD LOGIC
+// 3. SIGNUP WIZARD LOGIC
 // -------------------------------------------------------------
 const toStep2Btn = document.getElementById('toStep2Btn');
 const toStep3Btn = document.getElementById('toStep3Btn');
 const backToStep1Btn = document.getElementById('backToStep1Btn');
 const backToStep2Btn = document.getElementById('backToStep2Btn');
 const signupWizardForm = document.getElementById('signupWizardForm');
+const autoLoginFromSignupBtn = document.getElementById('autoLoginFromSignupBtn');
+
+let newProvisionedUser = null;
 
 function setWizardStep(stepNum) {
   [1, 2, 3].forEach(n => {
@@ -144,7 +192,7 @@ if (toStep3Btn) {
     const pan = document.getElementById('panNumber').value.trim();
     const aadhar = document.getElementById('aadharNumber').value.trim();
     if (!income || !pan || !aadhar) {
-      showToast('Please fill Income, PAN, and Aadhaar numbers', 'error');
+      showToast('Please fill Annual Income, PAN, and Aadhaar numbers', 'error');
       return;
     }
     setWizardStep(3);
@@ -160,7 +208,7 @@ if (signupWizardForm) {
     e.preventDefault();
     const submitBtn = document.getElementById('submitApplicationBtn');
     submitBtn.disabled = true;
-    submitBtn.innerHTML = 'Provisioning Account in Cloud...';
+    submitBtn.innerHTML = '<span>Provisioning Account in Aiven Cloud...</span>';
 
     const accountType = document.querySelector('input[name="accountType"]:checked')?.value || 'Saving Account';
     const facilities = [];
@@ -169,8 +217,9 @@ if (signupWizardForm) {
     if (document.getElementById('facAlerts')?.checked) facilities.push('Email & SMS Alerts');
     if (document.getElementById('facCheque')?.checked) facilities.push('Cheque Book');
 
+    const name = document.getElementById('fullName').value.trim();
     const payload = {
-      name: document.getElementById('fullName').value.trim(),
+      name,
       fathername: document.getElementById('fatherName').value.trim(),
       dob: document.getElementById('dob').value,
       gender: document.getElementById('gender').value,
@@ -201,7 +250,7 @@ if (signupWizardForm) {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('Account Created Successfully!', 'success');
+        showToast('Account Created Successfully with $500 Welcome Bonus!', 'success');
         signupWizardForm.style.display = 'none';
         const successCard = document.getElementById('signupSuccessCard');
         if (successCard) {
@@ -210,24 +259,45 @@ if (signupWizardForm) {
           const formattedCard = data.cardnumber.match(/.{1,4}/g)?.join(' ') || data.cardnumber;
           document.getElementById('resCardNumber').textContent = formattedCard;
           document.getElementById('resPin').textContent = data.pin;
+
+          newProvisionedUser = {
+            cardnumber: data.cardnumber,
+            pin: data.pin,
+            userName: name
+          };
         }
       } else {
         showToast(data.message || 'Account creation failed', 'error');
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit & Generate ATM Card ✨';
+        submitBtn.innerHTML = '<span>Submit & Generate ATM Card</span> ✨';
       }
     } catch (err) {
       showToast('Error: ' + err.message, 'error');
       submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Submit & Generate ATM Card ✨';
+      submitBtn.innerHTML = '<span>Submit & Generate ATM Card</span> ✨';
+    }
+  });
+}
+
+// 1-Click Auto Login from Signup Certificate
+if (autoLoginFromSignupBtn) {
+  autoLoginFromSignupBtn.addEventListener('click', () => {
+    if (newProvisionedUser) {
+      localStorage.setItem('apex_user', JSON.stringify(newProvisionedUser));
+      window.location.href = 'dashboard.html';
+    } else {
+      window.location.href = 'index.html';
     }
   });
 }
 
 // -------------------------------------------------------------
-// 3. DASHBOARD PAGE LOGIC
+// 4. DASHBOARD PAGE LOGIC & LEDGER AUDIT
 // -------------------------------------------------------------
 const dashBalanceDisplay = document.getElementById('dashBalanceDisplay');
+let cachedTransactions = [];
+let isBalanceHidden = false;
+let actualBalance = 0;
 
 if (dashBalanceDisplay) {
   const sessionUser = JSON.parse(localStorage.getItem('apex_user') || 'null');
@@ -247,31 +317,60 @@ if (dashBalanceDisplay) {
     syncDashboardData();
   }
 
+  // Balance Visibility Toggle Eye Button
+  const toggleBalBtn = document.getElementById('toggleBalanceVisibility');
+  if (toggleBalBtn) {
+    toggleBalBtn.addEventListener('click', () => {
+      isBalanceHidden = !isBalanceHidden;
+      toggleBalBtn.textContent = isBalanceHidden ? '🔒' : '👁️';
+      if (isBalanceHidden) {
+        dashBalanceDisplay.textContent = '$••••••';
+      } else {
+        dashBalanceDisplay.textContent = formatCurrency(actualBalance);
+      }
+    });
+  }
+
   // Logout Button
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('apex_user');
-      showToast('Logged out successfully', 'info');
-      setTimeout(() => { window.location.href = 'index.html'; }, 500);
+      showToast('Logged out securely', 'info');
+      setTimeout(() => { window.location.href = 'index.html'; }, 400);
     });
   }
 
-  // Refresh Balance Button
+  // Refresh Balance Button with Spinning Animation
   const refreshBalanceBtn = document.getElementById('refreshBalanceBtn');
+  const syncIcon = document.getElementById('syncIcon');
   if (refreshBalanceBtn) {
-    refreshBalanceBtn.addEventListener('click', () => {
-      syncDashboardData(true);
+    refreshBalanceBtn.addEventListener('click', async () => {
+      if (syncIcon) syncIcon.style.animation = 'spin 0.6s linear';
+      await syncDashboardData(true);
+      if (syncIcon) {
+        setTimeout(() => { syncIcon.style.animation = ''; }, 600);
+      }
     });
   }
 
-  // Modal Setup Helpers
+  // Setup Modals
   setupModal('openDepositModalBtn', 'depositModal');
   setupModal('openWithdrawalModalBtn', 'withdrawalModal');
   setupModal('cardActionDeposit', 'depositModal');
   setupModal('cardActionWithdraw', 'withdrawalModal');
   setupModal('cardActionFastCash', 'fastCashModal');
   setupModal('cardActionPinChange', 'pinChangeModal');
+
+  // Preset Amount Buttons in Modals
+  document.querySelectorAll('.preset-amt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetInput = document.getElementById(btn.dataset.target);
+      if (targetInput) {
+        targetInput.value = btn.dataset.val;
+      }
+    });
+  });
 
   // Handle Deposit Submit
   const depositForm = document.getElementById('depositForm');
@@ -280,6 +379,7 @@ if (dashBalanceDisplay) {
       e.preventDefault();
       const amt = document.getElementById('depositAmount').value;
       await handleTransaction('Deposit', amt, 'depositModal');
+      depositForm.reset();
     });
   }
 
@@ -290,6 +390,7 @@ if (dashBalanceDisplay) {
       e.preventDefault();
       const amt = document.getElementById('withdrawAmount').value;
       await handleTransaction('withdrawal', amt, 'withdrawalModal');
+      withdrawalForm.reset();
     });
   }
 
@@ -317,7 +418,7 @@ if (dashBalanceDisplay) {
 
       const sessionUser = JSON.parse(localStorage.getItem('apex_user') || '{}');
       if (currentPin !== sessionUser.pin) {
-        showToast('Current PIN does not match logged-in PIN!', 'error');
+        showToast('Current PIN does not match your active PIN!', 'error');
         return;
       }
 
@@ -329,7 +430,7 @@ if (dashBalanceDisplay) {
         });
         const data = await res.json();
         if (data.success) {
-          showToast('PIN successfully changed!', 'success');
+          showToast('PIN successfully updated in cloud tables!', 'success');
           sessionUser.pin = newPin;
           localStorage.setItem('apex_user', JSON.stringify(sessionUser));
           closeModal('pinChangeModal');
@@ -342,6 +443,15 @@ if (dashBalanceDisplay) {
       }
     });
   }
+
+  // Filter Tabs (All / Deposits / Withdrawals)
+  document.querySelectorAll('.filter-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTransactionsTable(btn.dataset.filter);
+    });
+  });
 
   // Mini Statement Action Scroll
   const cardActionStatement = document.getElementById('cardActionStatement');
@@ -367,7 +477,7 @@ async function handleTransaction(type, amount, modalId) {
     if (data.success) {
       showToast(data.message, 'success');
       closeModal(modalId);
-      syncDashboardData();
+      await syncDashboardData();
     } else {
       showToast(data.message || 'Transaction failed', 'error');
     }
@@ -384,50 +494,63 @@ async function syncDashboardData(showSuccessToast = false) {
     const res = await fetch(`/api/ministatement?pin=${sessionUser.pin}`);
     const data = await res.json();
     if (data.success) {
+      actualBalance = data.balance || 0;
       const balEl = document.getElementById('dashBalanceDisplay');
-      if (balEl) balEl.textContent = formatCurrency(data.balance);
+      if (balEl && !isBalanceHidden) {
+        balEl.textContent = formatCurrency(actualBalance);
+      }
 
       const timeEl = document.getElementById('dashLastSyncTime');
       if (timeEl) timeEl.textContent = new Date().toLocaleTimeString();
 
-      // Populate Transactions
-      const tbody = document.getElementById('txTableBody');
-      if (tbody) {
-        if (!data.transactions || data.transactions.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                No transaction records found for this account.
-              </td>
-            </tr>
-          `;
-        } else {
-          tbody.innerHTML = data.transactions.map(tx => {
-            const isDeposit = String(tx.type).toLowerCase() === 'deposit';
-            const badgeClass = isDeposit ? 'badge-deposit' : 'badge-withdrawal';
-            const prefix = isDeposit ? '+' : '-';
-            return `
-              <tr>
-                <td><strong style="color:#fff;">${tx.date || 'N/A'}</strong></td>
-                <td><span class="badge ${badgeClass}">${tx.type}</span></td>
-                <td style="font-family: var(--font-mono); color: var(--text-muted);">••••</td>
-                <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: ${isDeposit ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
-                  ${prefix}${formatCurrency(parseFloat(tx.amount) || 0)}
-                </td>
-              </tr>
-            `;
-          }).join('');
-        }
-      }
+      cachedTransactions = data.transactions || [];
+      renderTransactionsTable('all');
 
-      if (showSuccessToast) showToast('Balance and ledger synchronized from cloud', 'success');
+      if (showSuccessToast) showToast('Balance and ledger synchronized from Aiven Cloud', 'success');
     }
   } catch (err) {
     console.error('Sync Error:', err);
   }
 }
 
-// Modal Helper Functions
+function renderTransactionsTable(filter = 'all') {
+  const tbody = document.getElementById('txTableBody');
+  if (!tbody) return;
+
+  let list = cachedTransactions;
+  if (filter !== 'all') {
+    list = list.filter(tx => String(tx.type).toLowerCase() === String(filter).toLowerCase());
+  }
+
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+          No ${filter === 'all' ? '' : filter + ' '}records found for this account.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(tx => {
+    const isDeposit = String(tx.type).toLowerCase() === 'deposit';
+    const badgeClass = isDeposit ? 'badge-deposit' : 'badge-withdrawal';
+    const prefix = isDeposit ? '+' : '-';
+    return `
+      <tr>
+        <td><strong style="color:#fff;">${tx.date || 'N/A'}</strong></td>
+        <td><span class="badge ${badgeClass}">${tx.type}</span></td>
+        <td style="font-family: var(--font-mono); color: var(--text-muted);">••••</td>
+        <td style="text-align: right; font-family: var(--font-card); font-size: 1.05rem; font-weight: 700; color: ${isDeposit ? '#34d399' : '#fb7185'};">
+          ${prefix}${formatCurrency(parseFloat(tx.amount) || 0)}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Modal Helpers
 function setupModal(triggerId, modalId) {
   const trigger = document.getElementById(triggerId);
   const modal = document.getElementById(modalId);
@@ -456,3 +579,8 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
     }
   });
 });
+
+// Spin Animation CSS for Sync Icon
+const style = document.createElement('style');
+style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
+document.head.appendChild(style);

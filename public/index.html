@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex Bank | Enterprise Online Banking & ATM Suite</title>
+  <title>Apex Bank | Next-Gen Cloud Banking & Digital ATM</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <!-- Top Navigation -->
   <header class="navbar">
     <a href="/" class="brand">
-      <div class="brand-icon">🏛️</div>
+      <div class="brand-icon-wrapper">
+        <div class="brand-icon-glow"></div>
+        <div class="brand-icon">🏛️</div>
+      </div>
       <div class="brand-text">
         <h1>Apex Bank</h1>
-        <span>Management System</span>
+        <span>Cloud ATM & Online Suite</span>
       </div>
     </a>
     <div class="nav-actions">
@@ -21,110 +26,155 @@
         <span class="status-dot"></span>
         <span>Aiven Cloud Live</span>
       </div>
-      <a href="signup.html" class="btn btn-secondary">New Application</a>
+      <a href="signup.html" class="btn btn-secondary">Open New Account</a>
     </div>
   </header>
 
-  <!-- Main Hero & Login Section -->
+  <!-- Hero & Login -->
   <main class="container">
     <div class="hero-auth">
-      <!-- Left Hero Overview & Live Card Preview -->
+      <!-- Left Hero Column -->
       <div class="hero-left">
-        <div class="badge" style="display:inline-block; padding: 6px 14px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 99px; color: var(--accent-cyan); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;">
-          ⚡ Enterprise Banking Architecture
+        <div class="hero-badge">
+          <span>⚡ Next-Generation Banking Core</span>
         </div>
         <h2 class="title-hero">
           Secure Banking, <br>
-          <span class="gradient-text">Anywhere, Anytime.</span>
+          <span class="gradient-text">Engineered for Speed.</span>
         </h2>
         <p class="lead-text">
-          Access your digital ATM suite, manage balances, execute real-time deposits and withdrawals, and review transaction ledgers powered by high-speed cloud infrastructure.
+          Experience hyper-responsive cloud banking. Instant cash deposits, withdrawals, and tamper-proof transaction
+          ledgers powered by Aiven high-speed managed MySQL.
         </p>
 
-        <!-- Interactive 3D Digital Card -->
-        <div class="atm-card-wrapper">
-          <div class="atm-card" id="digitalCard">
+        <!-- 3D Interactive Metallic ATM Card -->
+        <div class="card-scene">
+          <div class="metal-card" id="digitalCard">
+            <div class="card-glare" id="cardGlare"></div>
+
             <div class="card-top">
-              <span style="font-family: var(--font-heading); font-weight: 800; font-size: 1.25rem; letter-spacing: 1px;">APEX PLATINUM</span>
-              <div class="card-chip"></div>
+              <span class="card-tier-label">APEX PLATINUM</span>
+              <div class="card-top-right">
+                <!-- NFC Contactless Waves SVG -->
+                <svg class="nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8.5 16.5a5 5 0 0 1 0-7"></path>
+                  <path d="M12 19a9 9 0 0 0 0-14"></path>
+                  <path d="M15.5 21.5a13 13 0 0 0 0-21"></path>
+                </svg>
+                <!-- Golden EMV Chip -->
+                <div class="emv-chip">
+                  <div class="emv-chip-core"></div>
+                </div>
+              </div>
             </div>
+
             <div class="card-number" id="previewCardNumber">5040 •••• •••• ••••</div>
+
             <div class="card-bottom">
               <div>
-                <div class="card-holder">Card Holder</div>
+                <div class="card-holder-label">CARDHOLDER</div>
                 <div class="card-holder-name" id="previewCardHolder">VALUED CUSTOMER</div>
               </div>
-              <div style="font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: #38bdf8;">
-                VISA
-              </div>
+              <div class="card-network">VISA</div>
             </div>
           </div>
         </div>
 
         <div style="display: flex; gap: 2rem; color: var(--text-secondary); font-size: 0.9rem;">
-          <div>🔒 <strong>256-Bit SSL</strong> Encryption</div>
-          <div>☁️ <strong>Aiven Managed</strong> MySQL</div>
-          <div>⚡ <strong>Instant</strong> Settlement</div>
         </div>
       </div>
 
-      <!-- Right Login Card -->
+      <!-- Right Login Column -->
       <div class="hero-right">
         <div class="auth-card">
-          <h3>Customer Login</h3>
-          <p class="subtitle">Enter your 16-digit card number and 4-digit PIN</p>
+          <h3>Customer Portal</h3>
+          <p class="subtitle">Authenticate with your 16-digit ATM card and PIN</p>
+
+          <!-- 1-Click Demo Account Helper -->
+          <div class="demo-helper-bar">
+            <span>💡 Testing? Try our pre-configured demo:</span>
+            <button type="button" class="btn-demo" id="autoFillDemoBtn">⚡ Auto-Fill Demo</button>
+          </div>
 
           <form id="loginForm">
             <div class="form-group">
               <label class="form-label" for="cardNumber">Card Number</label>
               <div class="input-wrapper">
                 <span class="input-icon">💳</span>
-                <input 
-                  type="text" 
-                  id="cardNumber" 
-                  class="form-control" 
-                  placeholder="5040 XXXX XXXX XXXX" 
-                  maxlength="19" 
-                  required 
-                  autocomplete="off"
-                >
+                <input type="text" id="cardNumber" class="form-control" placeholder="5040 XXXX XXXX XXXX" maxlength="19"
+                  required autocomplete="off">
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="pinNumber">ATM PIN</label>
+              <label class="form-label" for="pinNumber">ATM PIN (4-Digits)</label>
               <div class="input-wrapper">
                 <span class="input-icon">🔑</span>
-                <input 
-                  type="password" 
-                  id="pinNumber" 
-                  class="form-control" 
-                  placeholder="••••" 
-                  maxlength="6" 
-                  required 
-                  autocomplete="current-password"
-                >
-                <button type="button" class="input-action-btn" id="togglePinBtn" title="Toggle visibility">👁️</button>
+                <input type="password" id="pinNumber" class="form-control" placeholder="••••" maxlength="6" required
+                  autocomplete="current-password">
+                <button type="button" class="input-action-btn" id="togglePinBtn"
+                  title="Toggle PIN visibility">👁️</button>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary" id="loginSubmitBtn" style="width: 100%; margin-top: 1rem;">
-              <span>Access Banking Portal</span> →
+            <button type="submit" class="btn btn-primary" id="loginSubmitBtn"
+              style="width: 100%; margin-top: 1rem; padding: 15px;">
+              <span>Authorize & Enter ATM Suite</span> ➔
             </button>
           </form>
 
-          <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Don't have an account yet?</p>
-            <a href="signup.html" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600; display: inline-block; margin-top: 6px;">
-              Apply for an Account & ATM Card →
+          <div
+            style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">New to Apex Bank?</p>
+            <a href="signup.html"
+              style="color: var(--accent-cyan-light); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-top: 6px;">
+              Open a Digital Account & Provision ATM Card ➔
             </a>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Feature Showcase Section -->
+    <section class="features-section">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto 3.5rem;">
+        <span
+          style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px;">
+          Architectural Highlights
+        </span>
+        <h3 style="font-family: var(--font-display); font-size: 2.25rem; font-weight: 800; margin-top: 8px;">
+          Built on Modern Cloud FinTech
+        </h3>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">⚡</div>
+          <h4>Real-Time Cloud Ledger</h4>
+          <p>Every deposit, withdrawal, and fast cash transaction reconciles instantly with the central Aiven MySQL
+            database cluster.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">🛡️</div>
+          <h4>Automated KYC & Cards</h4>
+          <p>Multi-step digital onboarding automatically verifies credentials and provisions a unique 16-digit debit
+            card with 4-digit PIN.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">📜</div>
+          <h4>Audit-Grade Mini Statements</h4>
+          <p>Cryptographically verify transaction history with instant ledger generation, detailed balance audits, and
+            PIN synchronization.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div id="toastContainer" class="toast-container"></div>
   <script src="app.js"></script>
 </body>
+
 </html>
